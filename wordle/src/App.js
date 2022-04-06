@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route exact path='/' element={<Main></Main>}></Route>
+        <Route exact path='/' element={<Main max_step={[1,2,3,4,5,6,7]}></Main>}></Route>
       </Routes>
     </div>
   );
