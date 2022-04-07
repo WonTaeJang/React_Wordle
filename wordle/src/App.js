@@ -6,12 +6,13 @@ import Main from './components/Main.js';
 
 // npm install react-router-dom
 import {Route, Routes} from 'react-router-dom';
+import { useEffect } from 'react';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route exact path='/' element={<Main max_step={[1,2,3,4,5,6,7]}></Main>}></Route>
+        <Route exact path='/' element={<Main max_step={[1,2,3,4,5]}></Main>}></Route>
       </Routes>
     </div>
   );
