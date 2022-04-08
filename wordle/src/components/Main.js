@@ -22,6 +22,7 @@ function Main(props) {
             default:
                 console.log(word);
                 console.log(word);
+                console.log(word);
                 break;
         }
 
