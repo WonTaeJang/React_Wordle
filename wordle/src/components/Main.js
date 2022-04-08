@@ -21,6 +21,7 @@ function Main(props) {
             case "BACKSPACE": break;
             default:
                 console.log(word);
+                console.log(word);
                 break;
         }
 
