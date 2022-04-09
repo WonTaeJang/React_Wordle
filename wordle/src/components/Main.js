@@ -13,42 +13,68 @@ function Main(props) {
         "Z", "X", "C", "V", "B", "N", "M", "BACKSPACE", "ENTER"];
     let maxStep = props.max_step;
 
+    // 객체 깊은 복사
+    const cloneObj = obj => JSON.parse(JSON.stringify(obj));
+
     useEffect(() => {
+        let tempObj = {};
+        let tempArray = [];
 
         if (!keyArray.includes(word.word)) return;
-
+        //console.log(word.word);
         switch (word.word) {
-            case "ENTER": break;
+            case "ENTER": 
+                if(wordList[`step${step}`].length < maxStep.length)  return;
+                if(Object.keys(wordList).length >= maxStep.length) return;
+                // 단어가 정상적인 단어인지 확인하는 함수 필요
+
+                let stepUp = (step + 1)
+                setStep(stepUp);
+
+                tempObj = cloneObj(wordList);
+                tempObj[`step${stepUp}`] = [];
+
+                setWordList(tempObj);
+                break;
             case "BACKSPACE": 
                 if(wordList[`step${step}`].length == 0) return;
 
-                let deleteArray = [...wordList[`step${step}`]];
-                deleteArray.pop();
-                let tempDelObj = {};
-                tempDelObj[`step${step}`] = deleteArray;
+                tempArray = [...wordList[`step${step}`]];
+                tempArray.pop();
+                tempObj = cloneObj(wordList);
+                tempObj[`step${step}`] = tempArray;
 
-                setWordList(tempDelObj);
+                setWordList(tempObj);
                 break;
             default:
                 // step 당 알파벳은 5개까지
                 if(wordList[`step${step}`].length >= 5) return;
 
-                let tempArray = [...wordList[`step${step}`]];
+                // wordList의 step array
+                tempArray = [...wordList[`step${step}`]];
                 tempArray.push(word.word);
-
-                let tempObj = {};
+                tempObj = cloneObj(wordList);
                 tempObj[`step${step}`] = tempArray;
 
                 setWordList(tempObj);
-                
-
+        
                 break;
         }
 
     }, [word])   // word 값이 변할때만 반응
 
+    // wordlist 값이 변경되면 useEffect가 반응
     useEffect(()=>{
         console.log('hi: ', wordList);
+
+        // for(let i=0; i < props.max_step.length; i++)
+        // {
+        //     if(wordList[`step${step}`].length > (i))
+        //         document.getElementById(`${step+1}-${i}`).value = wordList[`step${step}`][i];
+        //     else
+        //     document.getElementById(`${step+1}-${i}`).value = '';
+        // }
+        
     }, [wordList])
 
     useEffect(() => {
