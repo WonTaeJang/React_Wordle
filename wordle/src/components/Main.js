@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
 import { Container, InputGroup, Row, Col, Form } from 'react-bootstrap';
+import KeyBoard from './KeyBoard';
 
 function Main(props) {
     // step에 따른 textbox 
     let [step, setStep] = useState(0);
     let [word, setWord] = useState({ word: '' });
-    let [wordList, setWordList] = useState({'step0':[]});
+    let [wordList, setWordList] = useState({ 'step0': [] });
     let [wordNum, setWordNum] = useState(0);
+    let wordRef = useRef([]);
     let keyArray = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
         "A", "S", "D", "F", "G", "H", "J", "K", "L",
         "Z", "X", "C", "V", "B", "N", "M", "BACKSPACE", "ENTER"];
@@ -23,9 +25,9 @@ function Main(props) {
         if (!keyArray.includes(word.word)) return;
         //console.log(word.word);
         switch (word.word) {
-            case "ENTER": 
-                if(wordList[`step${step}`].length < maxStep.length)  return;
-                if(Object.keys(wordList).length >= maxStep.length) return;
+            case "ENTER":
+                if (wordList[`step${step}`].length < 5) return;
+                if (Object.keys(wordList).length >= maxStep.length) return;
                 // 단어가 정상적인 단어인지 확인하는 함수 필요
 
                 let stepUp = (step + 1)
@@ -36,8 +38,8 @@ function Main(props) {
 
                 setWordList(tempObj);
                 break;
-            case "BACKSPACE": 
-                if(wordList[`step${step}`].length == 0) return;
+            case "BACKSPACE":
+                if (wordList[`step${step}`].length == 0) return;
 
                 tempArray = [...wordList[`step${step}`]];
                 tempArray.pop();
@@ -48,7 +50,7 @@ function Main(props) {
                 break;
             default:
                 // step 당 알파벳은 5개까지
-                if(wordList[`step${step}`].length >= 5) return;
+                if (wordList[`step${step}`].length >= 5) return;
 
                 // wordList의 step array
                 tempArray = [...wordList[`step${step}`]];
@@ -57,24 +59,22 @@ function Main(props) {
                 tempObj[`step${step}`] = tempArray;
 
                 setWordList(tempObj);
-        
+
                 break;
         }
 
     }, [word])   // word 값이 변할때만 반응
 
     // wordlist 값이 변경되면 useEffect가 반응
-    useEffect(()=>{
-        console.log('hi: ', wordList);
+    useEffect(() => {
+        console.log(wordList);
+        for (let i = 0; i < 5; i++) {
+            if (wordList[`step${step}`].length > (i))
+                document.getElementById(`${step + 1}-${i}`).value = wordList[`step${step}`][i];
+            else
+                document.getElementById(`${step + 1}-${i}`).value = '';
+        }
 
-        // for(let i=0; i < props.max_step.length; i++)
-        // {
-        //     if(wordList[`step${step}`].length > (i))
-        //         document.getElementById(`${step+1}-${i}`).value = wordList[`step${step}`][i];
-        //     else
-        //     document.getElementById(`${step+1}-${i}`).value = '';
-        // }
-        
     }, [wordList])
 
     useEffect(() => {
@@ -95,10 +95,11 @@ function Main(props) {
                 {
                     maxStep.map((a, i) => {
                         return (
-                            <WordBox key={i} id={a}></WordBox>
+                            <WordBox key={i} id={a} wordRef={wordRef}></WordBox>
                         )
                     })
                 }
+                <KeyBoard></KeyBoard>
             </Container>
 
         </>
@@ -109,13 +110,11 @@ function WordBox(props) {
     // console.log(props.id);
     return (
         <div>
-            <InputGroup>
-                <input id={`${props.id}-0`} type="text" readOnly className="word-box"></input>
-                <input id={`${props.id}-1`} type="text" readOnly className="word-box"></input>
-                <input id={`${props.id}-2`} type="text" readOnly className="word-box"></input>
-                <input id={`${props.id}-3`} type="text" readOnly className="word-box"></input>
-                <input id={`${props.id}-4`} type="text" readOnly className="word-box"></input>
-            </InputGroup>
+            <input id={`${props.id}-0`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[1] = el)}></input>
+            <input id={`${props.id}-1`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[2] = el)}></input>
+            <input id={`${props.id}-2`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[3] = el)}></input>
+            <input id={`${props.id}-3`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[4] = el)}></input>
+            <input id={`${props.id}-4`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[5] = el)}></input>
         </div>
     )
 }
