@@ -5,10 +5,32 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
+import { createStore} from "redux";
+import { Provider } from "react-redux";
+
+let 기본state =  [{word : ''}]
+
+function reducer(state = 기본state, 액션){
+  if(액션.type == 'btnClick')
+  {
+    let copy = [...state];
+    //copy.push(액션.payload);
+    copy[0]['word'] = 액션.payload;
+    console.log(copy);
+    return copy
+  }
+
+  return state;
+}
+
+let store = createStore(reducer);
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider> 
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

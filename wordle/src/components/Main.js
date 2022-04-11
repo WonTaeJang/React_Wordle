@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
 import { Container, InputGroup, Row, Col, Form } from 'react-bootstrap';
 import KeyBoard from './KeyBoard';
+import { useSelector } from 'react-redux';
 
 function Main(props) {
     // step에 따른 textbox 
@@ -67,12 +68,26 @@ function Main(props) {
 
     // wordlist 값이 변경되면 useEffect가 반응
     useEffect(() => {
-        console.log(wordList);
+        //console.log(wordList);
+        // for (let i = 0; i < 5; i++) {
+        //     if (wordList[`step${step}`].length > (i))
+        //         document.getElementById(`${step + 1}-${i}`).value = wordList[`step${step}`][i];
+        //     else
+        //         document.getElementById(`${step + 1}-${i}`).value = '';
+        // }
+
         for (let i = 0; i < 5; i++) {
             if (wordList[`step${step}`].length > (i))
-                document.getElementById(`${step + 1}-${i}`).value = wordList[`step${step}`][i];
+            {
+                //document.getElementById(`${step + 1}-${i}`).value = wordList[`step${step}`][i];
+                wordRef.current[i + step*5].value = wordList[`step${step}`][i];
+            }
             else
-                document.getElementById(`${step + 1}-${i}`).value = '';
+            {
+                //document.getElementById(`${step + 1}-${i}`).value = '';
+                wordRef.current[i + step*5].value = '';
+            }
+               
         }
 
     }, [wordList])
@@ -101,20 +116,21 @@ function Main(props) {
                 }
                 <KeyBoard></KeyBoard>
             </Container>
-
         </>
     )
 }
 
 function WordBox(props) {
     // console.log(props.id);
+    let count = parseInt(props.id);
+
     return (
         <div>
-            <input id={`${props.id}-0`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[1] = el)}></input>
-            <input id={`${props.id}-1`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[2] = el)}></input>
-            <input id={`${props.id}-2`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[3] = el)}></input>
-            <input id={`${props.id}-3`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[4] = el)}></input>
-            <input id={`${props.id}-4`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[5] = el)}></input>
+            <input id={`${props.id}-0`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(0 + (count-1)*5)] = el)}></input>
+            <input id={`${props.id}-1`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(1 + (count-1)*5)] = el)}></input>
+            <input id={`${props.id}-2`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(2 + (count-1)*5)] = el)}></input>
+            <input id={`${props.id}-3`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(3 + (count-1)*5)] = el)}></input>
+            <input id={`${props.id}-4`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(4 + (count-1)*5)] = el)}></input>
         </div>
     )
 }
