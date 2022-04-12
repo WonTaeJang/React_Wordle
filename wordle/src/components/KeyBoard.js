@@ -6,14 +6,26 @@ import '../App.css';
 function KeyBoard(props) {
     let dispatch = useDispatch();
 
+    let onClickEvent = (e) => {
+        if (props.wordlength === 5)
+            dispatch({ type: 'btnClick', payload: '' });
+        else
+            dispatch({ type: 'btnClick', payload: e });
+    }
+
     return (
         <>
             <div className="keyboard">
                 <div>
-                    <input type='button' onClick={(e)=>{
-                        dispatch({type:'btnClick', payload: 'Q'})
+                    <input type='button' onClick={()=>{
+                        if(props.wordlength === 5)
+                            dispatch({type:'btnClick', payload: ''});
+                        else
+                            dispatch({type:'btnClick', payload: 'Q'});
                     }} className="keyboard-btn" value="Q"></input>
-                    <input type='button' className="keyboard-btn" value="W"></input>
+                    <input type='button' onClick={()=>{
+                        onClickEvent('W');
+                    }} className="keyboard-btn" value="W"></input>
                     <input type='button' className="keyboard-btn" value="E"></input>
                     <input type='button' className="keyboard-btn" value="R"></input>
                     <input type='button' className="keyboard-btn" value="T"></input>

@@ -2,15 +2,30 @@ import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
 import { Container, InputGroup, Row, Col, Form } from 'react-bootstrap';
 import KeyBoard from './KeyBoard';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 function Main(props) {
+    let state = useSelector((state)=>state);
+    let dispatch = useDispatch();
+
+    useEffect(()=>{
+        console.log(state[0].word);
+        if(state[0].word != '')
+        {
+            setWord({ word: state[0].word });
+            dispatch({type:'btnClick', payload: ''});
+        }
+            
+    },[state])
+    //console.log(state);
+
     // step에 따른 textbox 
     let [step, setStep] = useState(0);
     let [word, setWord] = useState({ word: '' });
     let [wordList, setWordList] = useState({ 'step0': [] });
     let [wordNum, setWordNum] = useState(0);
     let wordRef = useRef([]);
+    let titleRef = useRef();
     let keyArray = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
         "A", "S", "D", "F", "G", "H", "J", "K", "L",
         "Z", "X", "C", "V", "B", "N", "M", "BACKSPACE", "ENTER"];
@@ -87,8 +102,9 @@ function Main(props) {
                 //document.getElementById(`${step + 1}-${i}`).value = '';
                 wordRef.current[i + step*5].value = '';
             }
-               
         }
+
+        titleRef.current.focus();
 
     }, [wordList])
 
@@ -98,7 +114,6 @@ function Main(props) {
                 // 이벤트 리스너를 사용할경우 usestate의 set만 가능하고 변수값을 가져올 수 없다.
                 // 그래서 set을 한 후 useEffect로 값을 읽는 방식을 채택
                 setWord({ word: e.key.toUpperCase() });
-
             }
         })
     }, [])
@@ -106,7 +121,7 @@ function Main(props) {
     return (
         <>
             <Container>
-                <h1>Wordle Start!</h1>
+                <h1 ref={el => (titleRef.current = el)}>Wordle Start!</h1>
                 {
                     maxStep.map((a, i) => {
                         return (
@@ -114,7 +129,7 @@ function Main(props) {
                         )
                     })
                 }
-                <KeyBoard></KeyBoard>
+                <KeyBoard wordlength={wordList[`step${step}`].length}></KeyBoard>
             </Container>
         </>
     )

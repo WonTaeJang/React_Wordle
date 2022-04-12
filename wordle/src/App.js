@@ -11,14 +11,6 @@ import { Route, Routes } from 'react-router-dom';
 import { useEffect,useState } from 'react';
 
 function App() {
-  let state = useSelector((state) => state[0] )
-  let [test,settest] = useState();
-
-  useEffect(()=>{
-    settest(state.reducer);
-    console.log(test);
-  },[state])
-
   //console.log('hi: ',state.reducer);
   return (
     <div className="App">

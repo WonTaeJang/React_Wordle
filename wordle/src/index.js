@@ -14,9 +14,7 @@ function reducer(state = 기본state, 액션){
   if(액션.type == 'btnClick')
   {
     let copy = [...state];
-    //copy.push(액션.payload);
-    copy[0]['word'] = 액션.payload;
-    console.log(copy);
+    copy[0].word = 액션.payload;
     return copy
   }
 
