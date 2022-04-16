@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
 import Data from '../data/data.js'; // 정답
 import Compare from '../data/compareWord.js'; // 정답 비교
-import { Container, InputGroup, Row, Col, Form } from 'react-bootstrap';
+import { Container} from 'react-bootstrap';
 import KeyBoard from './KeyBoard';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector} from 'react-redux';
 import axios from 'axios';
 
 function Main(props) {
@@ -51,7 +51,6 @@ function Main(props) {
 
         if (!keyArray.includes(word.word)) return;
 
-        //console.log(word.word);
         const chk = async () => {
             switch (word.word) {
                 case "ENTER":
@@ -67,14 +66,14 @@ function Main(props) {
                     // 단어가 dictionary api를 통해 실제로 있는 단어인지 확인
                     await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${wordSum}`)
                         .then((result)=>{
-                            console.log('success');
-                            console.log(result);
+                            //console.log('success');
+                            //console.log(result);
 
                             // 실제 단어가 있는지 확인되었으면 해당 값의 일치 정보를 체크
                             // chkTAnswer 에 정보를 넣고 정답인지 확인 후 정답이 아니면 다음 단계
-                            console.log(answer, wordSum);
+                            //console.log(answer, wordSum);
                             let comp = Compare(answer, wordSum);
-                            console.log(comp);
+                            //console.log(comp);
 
                             // 해당 값을 넣어 단어 리스트 색 변환하기
                             setChkTAnswer({...comp, step:step});
@@ -137,12 +136,10 @@ function Main(props) {
         for (let i = 0; i < 5; i++) {
             if (wordList[`step${step}`].length > (i))
             {
-                //document.getElementById(`${step + 1}-${i}`).value = wordList[`step${step}`][i];
                 wordRef.current[i + step*5].value = wordList[`step${step}`][i];
             }
             else
             {
-                //document.getElementById(`${step + 1}-${i}`).value = '';
                 wordRef.current[i + step*5].value = '';
             }
         }
@@ -160,7 +157,6 @@ function Main(props) {
         })
 
         console.log(answer);
-        //console.log(Compare('aaaaa','bbbbb'));
     }, [])
 
     useEffect(()=>{
@@ -174,12 +170,12 @@ function Main(props) {
                 case 'c': addCSS=' correct'; break;
                 case 'w': addCSS=' wrong'; break;
                 case 'a': addCSS=' any'; break;
+                default: break;
             }
 
             wordRef.current[i + chkTAnswer.step*5].className = wordRef.current[i + chkTAnswer.step*5].className + addCSS;
         })
-        
-
+    
         console.log(chkTAnswer);
     }, [chkTAnswer])
 
@@ -194,7 +190,6 @@ function Main(props) {
                         )
                     })
                 }
-                {/* <KeyBoard wordlength={wordList[`step${step}`].length}></KeyBoard> */}
                 <KeyBoard></KeyBoard>
             </Container>
         </>
