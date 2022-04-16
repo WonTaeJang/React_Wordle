@@ -1,21 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
 import Data from '../data/data.js'; // 정답
+import Compare from '../data/compareWord.js'; // 정답 비교
 import { Container, InputGroup, Row, Col, Form } from 'react-bootstrap';
 import KeyBoard from './KeyBoard';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
 function Main(props) {
     let state = useSelector((state)=>state);
-    let dispatch = useDispatch();
+    //let dispatch = useDispatch();
     const answer = Data.word;
 
     useEffect(()=>{
-        console.log(state[0].word);
+        //console.log(state[0].word);
         if(state[0].word !== '')
         {
-            setWord({ word: state[0].word });
-            dispatch({type:'btnClick', payload: ''});
+            if(wordList[`step${step}`].length < 5)
+            {
+                setWord({ word: state[0].word });
+            }
         }
             
     },[state])
@@ -24,6 +28,13 @@ function Main(props) {
     let [step, setStep] = useState(0);
     let [word, setWord] = useState({ word: '' });
     let [wordList, setWordList] = useState({ 'step0': [] });
+
+    let [chkTAnswer, setChkTAnswer] = useState({
+        step:0,
+        compareList:[],
+        isAnswer:false
+    })
+
     let wordRef = useRef([]);
     let titleRef = useRef();
     let keyArray = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
@@ -41,44 +52,83 @@ function Main(props) {
         if (!keyArray.includes(word.word)) return;
 
         //console.log(word.word);
-        switch (word.word) {
-            case "ENTER":
-                if (wordList[`step${step}`].length < 5) return;
-                if (Object.keys(wordList).length >= maxStep.length) return;
-                // 단어가 정상적인 단어인지 확인하는 함수 필요
+        const chk = async () => {
+            switch (word.word) {
+                case "ENTER":
+                    // 단어 입력 후 엔터키 눌렀을때
+                    if (wordList[`step${step}`].length < 5) return;
+                    if (Object.keys(wordList).length >= maxStep.length) return;
+    
+                    let wordSum='';
+                    wordList[`step${step}`].map((w,i)=>{
+                        wordSum += w;
+                    })
+    
+                    // 단어가 dictionary api를 통해 실제로 있는 단어인지 확인
+                    await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${wordSum}`)
+                        .then((result)=>{
+                            console.log('success');
+                            console.log(result);
 
-                let stepUp = (step + 1)
-                setStep(stepUp);
+                            // 실제 단어가 있는지 확인되었으면 해당 값의 일치 정보를 체크
+                            // chkTAnswer 에 정보를 넣고 정답인지 확인 후 정답이 아니면 다음 단계
+                            console.log(answer, wordSum);
+                            let comp = Compare(answer, wordSum);
+                            console.log(comp);
 
-                tempObj = cloneObj(wordList);
-                tempObj[`step${stepUp}`] = [];
-
-                setWordList(tempObj);
-                break;
-            case "BACKSPACE":
-                if (wordList[`step${step}`].length === 0) return;
-
-                tempArray = [...wordList[`step${step}`]];
-                tempArray.pop();
-                tempObj = cloneObj(wordList);
-                tempObj[`step${step}`] = tempArray;
-
-                setWordList(tempObj);
-                break;
-            default:
-                // step 당 알파벳은 5개까지
-                if (wordList[`step${step}`].length >= 5) return;
-
-                // wordList의 step array
-                tempArray = [...wordList[`step${step}`]];
-                tempArray.push(word.word);
-                tempObj = cloneObj(wordList);
-                tempObj[`step${step}`] = tempArray;
-
-                setWordList(tempObj);
-
-                break;
+                            // 해당 값을 넣어 단어 리스트 색 변환하기
+                            setChkTAnswer({...comp, step:step});
+        
+                            if(comp.isAnswer){
+                                console.log("Clear");
+                            }
+                            else{
+                                let stepUp = (step + 1)
+                                setStep(stepUp);
+                
+                                tempObj = cloneObj(wordList);
+                                tempObj[`step${stepUp}`] = [];
+                
+                                setWordList(tempObj);
+                            }
+                        })
+                        .catch((e)=>{
+                            if(e.response){
+                                if(e.response.status === 404)
+                                {
+                                    console.log(`fail word: ${wordSum}`);
+                                } 
+                            }
+                        })
+    
+                    break;
+                case "BACKSPACE":
+                    if (wordList[`step${step}`].length === 0) return;
+    
+                    tempArray = [...wordList[`step${step}`]];
+                    tempArray.pop();
+                    tempObj = cloneObj(wordList);
+                    tempObj[`step${step}`] = tempArray;
+    
+                    setWordList(tempObj);
+                    break;
+                default:
+                    // step 당 알파벳은 5개까지
+                    if (wordList[`step${step}`].length >= 5) return;
+    
+                    // wordList의 step array
+                    tempArray = [...wordList[`step${step}`]];
+                    tempArray.push(word.word);
+                    tempObj = cloneObj(wordList);
+                    tempObj[`step${step}`] = tempArray;
+    
+                    setWordList(tempObj);
+    
+                    break;
+            }
         }
+
+        chk();
 
     }, [word])   // word 값이 변할때만 반응
 
@@ -110,7 +160,28 @@ function Main(props) {
         })
 
         console.log(answer);
+        //console.log(Compare('aaaaa','bbbbb'));
     }, [])
+
+    useEffect(()=>{
+        if(chkTAnswer.compareList.length <= 0) return;
+
+        let addCSS = '';
+
+        chkTAnswer.compareList.map((comp, i)=>{
+            switch(comp)
+            {
+                case 'c': addCSS=' correct'; break;
+                case 'w': addCSS=' wrong'; break;
+                case 'a': addCSS=' any'; break;
+            }
+
+            wordRef.current[i + chkTAnswer.step*5].className = wordRef.current[i + chkTAnswer.step*5].className + addCSS;
+        })
+        
+
+        console.log(chkTAnswer);
+    }, [chkTAnswer])
 
     return (
         <>
@@ -123,7 +194,8 @@ function Main(props) {
                         )
                     })
                 }
-                <KeyBoard wordlength={wordList[`step${step}`].length}></KeyBoard>
+                {/* <KeyBoard wordlength={wordList[`step${step}`].length}></KeyBoard> */}
+                <KeyBoard></KeyBoard>
             </Container>
         </>
     )

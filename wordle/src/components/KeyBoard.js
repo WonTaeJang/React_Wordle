@@ -7,10 +7,11 @@ function KeyBoard(props) {
     let dispatch = useDispatch();
 
     let onClickEvent = (e) => {
-        if (props.wordlength === 5)
-            dispatch({ type: 'btnClick', payload: '' });
-        else
-            dispatch({ type: 'btnClick', payload: e });
+        dispatch({ type: 'btnClick', payload: e });
+        // if (props.wordlength === 5)
+        //     dispatch({ type: 'btnClick', payload: '' });
+        // else
+        //     dispatch({ type: 'btnClick', payload: e });
     }
 
     return (

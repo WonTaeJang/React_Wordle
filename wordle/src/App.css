@@ -40,13 +40,35 @@
 .word-box {
   width: 50px;
   height: 50px;
-  background-color: blanchedalmond;
+  background-color: white;
   /* padding-bottom: 10px; */
   margin: 5px;
   font-size: 55px;
   text-align: center;
   vertical-align: middle;
   font: Arial bold;
+  border: 2px solid gray;
+}
+
+.correct {
+  background-color: rgb(99, 185, 106);
+  /* padding-bottom: 10px; */
+  color: white;
+  border: 2px solid rgb(99, 185, 106);
+}
+
+.wrong {
+  background-color: rgb(184, 185, 97);
+  /* padding-bottom: 10px; */
+  color: white;
+  border: 2px solid rgb(184, 185, 97);
+}
+
+.any {
+  background-color: gray;
+  /* padding-bottom: 10px; */
+  color: white;
+  border: 2px solid gray;
 }
 
 body {
