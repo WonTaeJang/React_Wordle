@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
+import Data from '../data/data.js'; // 정답
 import { Container, InputGroup, Row, Col, Form } from 'react-bootstrap';
 import KeyBoard from './KeyBoard';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,23 +8,22 @@ import { useSelector, useDispatch } from 'react-redux';
 function Main(props) {
     let state = useSelector((state)=>state);
     let dispatch = useDispatch();
+    const answer = Data.word;
 
     useEffect(()=>{
         console.log(state[0].word);
-        if(state[0].word != '')
+        if(state[0].word !== '')
         {
             setWord({ word: state[0].word });
             dispatch({type:'btnClick', payload: ''});
         }
             
     },[state])
-    //console.log(state);
 
     // step에 따른 textbox 
     let [step, setStep] = useState(0);
     let [word, setWord] = useState({ word: '' });
     let [wordList, setWordList] = useState({ 'step0': [] });
-    let [wordNum, setWordNum] = useState(0);
     let wordRef = useRef([]);
     let titleRef = useRef();
     let keyArray = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
@@ -39,6 +39,7 @@ function Main(props) {
         let tempArray = [];
 
         if (!keyArray.includes(word.word)) return;
+
         //console.log(word.word);
         switch (word.word) {
             case "ENTER":
@@ -55,7 +56,7 @@ function Main(props) {
                 setWordList(tempObj);
                 break;
             case "BACKSPACE":
-                if (wordList[`step${step}`].length == 0) return;
+                if (wordList[`step${step}`].length === 0) return;
 
                 tempArray = [...wordList[`step${step}`]];
                 tempArray.pop();
@@ -83,14 +84,6 @@ function Main(props) {
 
     // wordlist 값이 변경되면 useEffect가 반응
     useEffect(() => {
-        //console.log(wordList);
-        // for (let i = 0; i < 5; i++) {
-        //     if (wordList[`step${step}`].length > (i))
-        //         document.getElementById(`${step + 1}-${i}`).value = wordList[`step${step}`][i];
-        //     else
-        //         document.getElementById(`${step + 1}-${i}`).value = '';
-        // }
-
         for (let i = 0; i < 5; i++) {
             if (wordList[`step${step}`].length > (i))
             {
@@ -103,7 +96,6 @@ function Main(props) {
                 wordRef.current[i + step*5].value = '';
             }
         }
-
         titleRef.current.focus();
 
     }, [wordList])
@@ -116,6 +108,8 @@ function Main(props) {
                 setWord({ word: e.key.toUpperCase() });
             }
         })
+
+        console.log(answer);
     }, [])
 
     return (
@@ -136,7 +130,6 @@ function Main(props) {
 }
 
 function WordBox(props) {
-    // console.log(props.id);
     let count = parseInt(props.id);
 
     return (

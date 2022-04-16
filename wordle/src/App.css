@@ -55,5 +55,15 @@ body {
 }
 
 .keyboard {
-  width: 800px;
+  margin: auto;
+}
+
+.keyboard input {
+  background-color: rgb(173, 173, 173);
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  border: none;
+  margin: 1px;
+
 }

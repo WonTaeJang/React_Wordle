@@ -11,7 +11,7 @@ import { Provider } from "react-redux";
 let 기본state =  [{word : ''}]
 
 function reducer(state = 기본state, 액션){
-  if(액션.type == 'btnClick')
+  if(액션.type === 'btnClick')
   {
     let copy = [...state];
     copy[0].word = 액션.payload;
