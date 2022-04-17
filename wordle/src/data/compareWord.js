@@ -56,7 +56,7 @@ function compareWord(answers, inputWords){
         }
     }
 
-    return {compareList:compareList, isAnswer:isAnswer};
+    return {compareList:compareList, isAnswer:isAnswer, inputWords:inputWords};
 }
 
 export default compareWord;

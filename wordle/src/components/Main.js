@@ -190,7 +190,7 @@ function Main(props) {
                         )
                     })
                 }
-                <KeyBoard></KeyBoard>
+                <KeyBoard chkTAnswer={chkTAnswer}></KeyBoard>
             </Container>
         </>
     )
