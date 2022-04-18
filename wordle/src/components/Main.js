@@ -9,25 +9,14 @@ import axios from 'axios';
 
 function Main(props) {
     let state = useSelector((state)=>state);
-    //let dispatch = useDispatch();
     const answer = Data.word;
-
-    useEffect(()=>{
-        //console.log(state[0].word);
-        if(state[0].word !== '')
-        {
-            if(wordList[`step${step}`].length < 5)
-            {
-                setWord({ word: state[0].word });
-            }
-        }
-            
-    },[state])
 
     // step에 따른 textbox 
     let [step, setStep] = useState(0);
     let [word, setWord] = useState({ word: '' });
-    let [wordList, setWordList] = useState({ 'step0': [] });
+    let [wordList, setWordList] = useState({
+         'step0': [] 
+    });
 
     let [chkTAnswer, setChkTAnswer] = useState({
         step:0,
@@ -45,6 +34,30 @@ function Main(props) {
     // 객체 깊은 복사
     const cloneObj = obj => JSON.parse(JSON.stringify(obj));
 
+    // 최초 1회 실행
+    useEffect(() => {
+        window.addEventListener("keydown", (e) => {
+            if (keyArray.includes(e.key.toUpperCase())) {
+                // 이벤트 리스너를 사용할경우 usestate의 set만 가능하고 변수값을 가져올 수 없다.
+                // 그래서 set을 한 후 useEffect로 값을 읽는 방식을 채택
+                setWord({ word: e.key.toUpperCase() });
+            }
+        })
+
+        console.log(answer);
+    }, [])
+
+    useEffect(()=>{
+        if(state[0].word !== '')
+        {
+            if(wordList[`step${step}`].length < 5)
+            {
+                setWord({ word: state[0].word });
+            }
+        }
+            
+    },[state])
+
     useEffect(() => {
         let tempObj = {};
         let tempArray = [];
@@ -54,9 +67,11 @@ function Main(props) {
         const chk = async () => {
             switch (word.word) {
                 case "ENTER":
+
+                    console.log(wordList);
                     // 단어 입력 후 엔터키 눌렀을때
                     if (wordList[`step${step}`].length < 5) return;
-                    if (Object.keys(wordList).length >= maxStep.length) return;
+                    if (Object.keys(wordList).length > maxStep.length) return;
     
                     let wordSum='';
                     wordList[`step${step}`].map((w,i)=>{
@@ -66,20 +81,24 @@ function Main(props) {
                     // 단어가 dictionary api를 통해 실제로 있는 단어인지 확인
                     await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${wordSum}`)
                         .then((result)=>{
-                            //console.log('success');
                             //console.log(result);
 
                             // 실제 단어가 있는지 확인되었으면 해당 값의 일치 정보를 체크
                             // chkTAnswer 에 정보를 넣고 정답인지 확인 후 정답이 아니면 다음 단계
-                            //console.log(answer, wordSum);
                             let comp = Compare(answer, wordSum);
-                            //console.log(comp);
 
                             // 해당 값을 넣어 단어 리스트 색 변환하기
                             setChkTAnswer({...comp, step:step});
         
-                            if(comp.isAnswer){
-                                console.log("Clear");
+                            //console.log(step, maxStep, (step+1) === maxStep);
+                            if(comp.isAnswer || (step+1) === maxStep.length){
+                                console.log("step over");
+
+                                if(comp.isAnswer)
+                                {
+                                    alert("is Correct!!");
+                                    //console.log();
+                                }                                
                             }
                             else{
                                 let stepUp = (step + 1)
@@ -147,18 +166,7 @@ function Main(props) {
 
     }, [wordList])
 
-    useEffect(() => {
-        window.addEventListener("keydown", (e) => {
-            if (keyArray.includes(e.key.toUpperCase())) {
-                // 이벤트 리스너를 사용할경우 usestate의 set만 가능하고 변수값을 가져올 수 없다.
-                // 그래서 set을 한 후 useEffect로 값을 읽는 방식을 채택
-                setWord({ word: e.key.toUpperCase() });
-            }
-        })
-
-        console.log(answer);
-    }, [])
-
+    // 색 변환
     useEffect(()=>{
         if(chkTAnswer.compareList.length <= 0) return;
 

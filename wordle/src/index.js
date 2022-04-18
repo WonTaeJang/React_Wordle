@@ -25,7 +25,8 @@ let store = createStore(reducer);
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename="/Wordle">
+    {/* <BrowserRouter basename="/Wordle"> */}
+    <BrowserRouter basename="/">
       <Provider store={store}>
         <App />
       </Provider> 
