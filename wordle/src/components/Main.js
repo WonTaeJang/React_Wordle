@@ -47,13 +47,11 @@ function Main(props) {
         console.log(answer);
     }, [])
 
+    // keyboard로 키값을 받을때
     useEffect(()=>{
         if(state[0].word !== '')
         {
-            if(wordList[`step${step}`].length < 5)
-            {
-                setWord({ word: state[0].word });
-            }
+            setWord({ word: state[0].word });
         }
             
     },[state])
@@ -68,7 +66,7 @@ function Main(props) {
             switch (word.word) {
                 case "ENTER":
 
-                    console.log(wordList);
+                    //console.log(wordList);
                     // 단어 입력 후 엔터키 눌렀을때
                     if (wordList[`step${step}`].length < 5) return;
                     if (Object.keys(wordList).length > maxStep.length) return;
@@ -154,16 +152,11 @@ function Main(props) {
     useEffect(() => {
         for (let i = 0; i < 5; i++) {
             if (wordList[`step${step}`].length > (i))
-            {
                 wordRef.current[i + step*5].value = wordList[`step${step}`][i];
-            }
             else
-            {
                 wordRef.current[i + step*5].value = '';
-            }
         }
         titleRef.current.focus();
-
     }, [wordList])
 
     // 색 변환

@@ -10,10 +10,6 @@ function KeyBoard(props) {
 
     let onClickEvent = (e) => {
         dispatch({ type: 'btnClick', payload: e });
-        // if (props.wordlength === 5)
-        //     dispatch({ type: 'btnClick', payload: '' });
-        // else
-        //     dispatch({ type: 'btnClick', payload: e });
     }
 
     useEffect(()=>{
@@ -22,12 +18,7 @@ function KeyBoard(props) {
         if(chkTAnswer.compareList.length <= 0) return;
 
         chkTAnswer.compareList.map((comp, i)=>{
-            //console.log(comp, chkTAnswer.inputWords[i], (chkTAnswer.inputWords[i].charCodeAt()-65));
-            //console.log(keyboard.current[(chkTAnswer.inputWords[i].charCodeAt()-65)].className);
-            //keyboard.current[(chkTAnswer.inputWords[i].charCodeAt()-65)].className = keyboard.current[(chkTAnswer.inputWords[i].charCodeAt()-65)].className + ' correct';
-            //console.log(keyboard.current[(chkTAnswer.inputWords[i].charCodeAt()-65)].className);
             let arr = keyboard.current[(chkTAnswer.inputWords[i].charCodeAt()-65)].className.split(' ');
-            //console.log(arr);
             if(arr.length === 1)
             {
                 // none click
