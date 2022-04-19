@@ -92,11 +92,11 @@ function Main(props) {
                             if(comp.isAnswer || (step+1) === maxStep.length){
                                 console.log("step over");
 
-                                if(comp.isAnswer)
-                                {
-                                    alert("is Correct!!");
-                                    //console.log();
-                                }                                
+                                // if(comp.isAnswer)
+                                // {
+                                //     alert("is Correct!!");
+                                //     //console.log();
+                                // }                                
                             }
                             else{
                                 let stepUp = (step + 1)
@@ -160,6 +160,7 @@ function Main(props) {
     }, [wordList])
 
     // 색 변환
+    // 게임 종료 확인
     useEffect(()=>{
         if(chkTAnswer.compareList.length <= 0) return;
 
@@ -176,8 +177,21 @@ function Main(props) {
 
             wordRef.current[i + chkTAnswer.step*5].className = wordRef.current[i + chkTAnswer.step*5].className + addCSS;
         })
-    
-        console.log(chkTAnswer);
+
+        if(((chkTAnswer.step+1) === maxStep.length) || chkTAnswer.isAnswer)
+        {
+            if(chkTAnswer.isAnswer)
+            {
+                // 모달창 필요
+                alert('Clear!!');
+            }
+            else
+            {
+                // 모달창 필요
+                alert('Fail!!');
+            }
+        }
+
     }, [chkTAnswer])
 
     return (

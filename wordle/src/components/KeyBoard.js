@@ -7,14 +7,11 @@ function KeyBoard(props) {
     let dispatch = useDispatch();
     let chkTAnswer = props.chkTAnswer;
     let keyboard = useRef([]);
-
     let onClickEvent = (e) => {
         dispatch({ type: 'btnClick', payload: e });
     }
 
     useEffect(()=>{
-        //console.log('hi');
-
         if(chkTAnswer.compareList.length <= 0) return;
 
         chkTAnswer.compareList.map((comp, i)=>{
@@ -38,8 +35,6 @@ function KeyBoard(props) {
             }
             else
             {
-                //console(arr[0], arr[1]);
-
                 // clicked
                 if(arr[1] === 'correct')
                 {
