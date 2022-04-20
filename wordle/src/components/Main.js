@@ -2,26 +2,29 @@ import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
 import Data from '../data/data.js'; // 정답
 import Compare from '../data/compareWord.js'; // 정답 비교
-import { Container} from 'react-bootstrap';
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { Container, Button, Modal } from 'react-bootstrap';
+
 import KeyBoard from './KeyBoard';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
+
 function Main(props) {
-    let state = useSelector((state)=>state);
+    let state = useSelector((state) => state);
     const answer = Data.word;
 
     // step에 따른 textbox 
     let [step, setStep] = useState(0);
     let [word, setWord] = useState({ word: '' });
     let [wordList, setWordList] = useState({
-         'step0': [] 
+        'step0': []
     });
 
     let [chkTAnswer, setChkTAnswer] = useState({
-        step:0,
-        compareList:[],
-        isAnswer:false
+        step: 0,
+        compareList: [],
+        isAnswer: false
     })
 
     let wordRef = useRef([]);
@@ -48,13 +51,12 @@ function Main(props) {
     }, [])
 
     // keyboard로 키값을 받을때
-    useEffect(()=>{
-        if(state[0].word !== '')
-        {
+    useEffect(() => {
+        if (state[0].word !== '') {
             setWord({ word: state[0].word });
         }
-            
-    },[state])
+
+    }, [state])
 
     useEffect(() => {
         let tempObj = {};
@@ -70,15 +72,15 @@ function Main(props) {
                     // 단어 입력 후 엔터키 눌렀을때
                     if (wordList[`step${step}`].length < 5) return;
                     if (Object.keys(wordList).length > maxStep.length) return;
-    
-                    let wordSum='';
-                    wordList[`step${step}`].map((w,i)=>{
+
+                    let wordSum = '';
+                    wordList[`step${step}`].map((w, i) => {
                         wordSum += w;
                     })
-    
+
                     // 단어가 dictionary api를 통해 실제로 있는 단어인지 확인
                     await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${wordSum}`)
-                        .then((result)=>{
+                        .then((result) => {
                             //console.log(result);
 
                             // 실제 단어가 있는지 확인되었으면 해당 값의 일치 정보를 체크
@@ -86,10 +88,10 @@ function Main(props) {
                             let comp = Compare(answer, wordSum);
 
                             // 해당 값을 넣어 단어 리스트 색 변환하기
-                            setChkTAnswer({...comp, step:step});
-        
+                            setChkTAnswer({ ...comp, step: step });
+
                             //console.log(step, maxStep, (step+1) === maxStep);
-                            if(comp.isAnswer || (step+1) === maxStep.length){
+                            if (comp.isAnswer || (step + 1) === maxStep.length) {
                                 console.log("step over");
 
                                 // if(comp.isAnswer)
@@ -98,48 +100,47 @@ function Main(props) {
                                 //     //console.log();
                                 // }                                
                             }
-                            else{
+                            else {
                                 let stepUp = (step + 1)
                                 setStep(stepUp);
-                
+
                                 tempObj = cloneObj(wordList);
                                 tempObj[`step${stepUp}`] = [];
-                
+
                                 setWordList(tempObj);
                             }
                         })
-                        .catch((e)=>{
-                            if(e.response){
-                                if(e.response.status === 404)
-                                {
+                        .catch((e) => {
+                            if (e.response) {
+                                if (e.response.status === 404) {
                                     console.log(`fail word: ${wordSum}`);
-                                } 
+                                }
                             }
                         })
-    
+
                     break;
                 case "BACKSPACE":
                     if (wordList[`step${step}`].length === 0) return;
-    
+
                     tempArray = [...wordList[`step${step}`]];
                     tempArray.pop();
                     tempObj = cloneObj(wordList);
                     tempObj[`step${step}`] = tempArray;
-    
+
                     setWordList(tempObj);
                     break;
                 default:
                     // step 당 알파벳은 5개까지
                     if (wordList[`step${step}`].length >= 5) return;
-    
+
                     // wordList의 step array
                     tempArray = [...wordList[`step${step}`]];
                     tempArray.push(word.word);
                     tempObj = cloneObj(wordList);
                     tempObj[`step${step}`] = tempArray;
-    
+
                     setWordList(tempObj);
-    
+
                     break;
             }
         }
@@ -152,47 +153,49 @@ function Main(props) {
     useEffect(() => {
         for (let i = 0; i < 5; i++) {
             if (wordList[`step${step}`].length > (i))
-                wordRef.current[i + step*5].value = wordList[`step${step}`][i];
+                wordRef.current[i + step * 5].value = wordList[`step${step}`][i];
             else
-                wordRef.current[i + step*5].value = '';
+                wordRef.current[i + step * 5].value = '';
         }
         titleRef.current.focus();
     }, [wordList])
 
     // 색 변환
     // 게임 종료 확인
-    useEffect(()=>{
-        if(chkTAnswer.compareList.length <= 0) return;
+    useEffect(() => {
+        if (chkTAnswer.compareList.length <= 0) return;
 
         let addCSS = '';
 
-        chkTAnswer.compareList.map((comp, i)=>{
-            switch(comp)
-            {
-                case 'c': addCSS=' correct'; break;
-                case 'w': addCSS=' wrong'; break;
-                case 'a': addCSS=' any'; break;
+        chkTAnswer.compareList.map((comp, i) => {
+            switch (comp) {
+                case 'c': addCSS = ' correct'; break;
+                case 'w': addCSS = ' wrong'; break;
+                case 'a': addCSS = ' any'; break;
                 default: break;
             }
 
-            wordRef.current[i + chkTAnswer.step*5].className = wordRef.current[i + chkTAnswer.step*5].className + addCSS;
+            wordRef.current[i + chkTAnswer.step * 5].className = wordRef.current[i + chkTAnswer.step * 5].className + addCSS;
         })
 
-        if(((chkTAnswer.step+1) === maxStep.length) || chkTAnswer.isAnswer)
-        {
-            if(chkTAnswer.isAnswer)
-            {
+        if (((chkTAnswer.step + 1) === maxStep.length) || chkTAnswer.isAnswer) {
+            if (chkTAnswer.isAnswer) {
                 // 모달창 필요
                 alert('Clear!!');
             }
-            else
-            {
+            else {
                 // 모달창 필요
                 alert('Fail!!');
             }
         }
 
     }, [chkTAnswer])
+
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     return (
         <>
@@ -206,6 +209,32 @@ function Main(props) {
                     })
                 }
                 <KeyBoard chkTAnswer={chkTAnswer}></KeyBoard>
+
+                <Button variant="primary" onClick={handleShow}>
+                    Launch static backdrop modal
+                </Button>
+
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Modal title</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        I will not close if you click outside me. Don't even try to press
+                        escape key.
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary">Understood</Button>
+                    </Modal.Footer>
+                </Modal>
             </Container>
         </>
     )
@@ -216,11 +245,11 @@ function WordBox(props) {
 
     return (
         <div>
-            <input id={`${props.id}-0`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(0 + (count-1)*5)] = el)}></input>
-            <input id={`${props.id}-1`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(1 + (count-1)*5)] = el)}></input>
-            <input id={`${props.id}-2`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(2 + (count-1)*5)] = el)}></input>
-            <input id={`${props.id}-3`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(3 + (count-1)*5)] = el)}></input>
-            <input id={`${props.id}-4`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(4 + (count-1)*5)] = el)}></input>
+            <input id={`${props.id}-0`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(0 + (count - 1) * 5)] = el)}></input>
+            <input id={`${props.id}-1`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(1 + (count - 1) * 5)] = el)}></input>
+            <input id={`${props.id}-2`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(2 + (count - 1) * 5)] = el)}></input>
+            <input id={`${props.id}-3`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(3 + (count - 1) * 5)] = el)}></input>
+            <input id={`${props.id}-4`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(4 + (count - 1) * 5)] = el)}></input>
         </div>
     )
 }

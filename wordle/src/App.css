@@ -43,11 +43,12 @@
   background-color: white;
   /* padding-bottom: 10px; */
   margin: 5px;
-  font-size: 55px;
+  font-size: 45px;
   text-align: center;
   vertical-align: middle;
-  font: Arial bold;
+  /* font: Arial bold; */
   border: 2px solid gray;
+  font-family: "arial";
 }
 
 .keyboard-btn {
