@@ -13,6 +13,16 @@ function KeyBoard(props) {
             dispatch({ type: 'btnClick', payload: e });
     }
 
+    // game_state가 true가 되면 게임 초기화
+    useEffect(()=>{
+        if(game_state)
+        {
+            keyboard.current.map((kb,i)=>{
+                kb.className = 'keyboard-btn';
+            })
+        }
+    }, [game_state])
+
     useEffect(()=>{
         if(chkTAnswer.compareList.length <= 0) return;
 
@@ -63,8 +73,6 @@ function KeyBoard(props) {
             }
 
         })
-
-        //console.log(chkTAnswer);
     },[chkTAnswer])
 
     return (

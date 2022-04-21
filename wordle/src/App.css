@@ -90,6 +90,22 @@ body {
   padding: 0.5rem 1rem;
   text-align: center;
   border: none;
-  margin: 2px;
+  margin: 1px;
+  padding: 10px;
   height: 40px;
+}
+
+.nav {
+  right: 0;
+  position: fixed;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  margin: 7px;
+}
+
+*:focus {
+  outline: 0;
 }

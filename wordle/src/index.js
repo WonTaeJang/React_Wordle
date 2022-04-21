@@ -10,6 +10,7 @@ import { Provider } from "react-redux";
 
 let 기본state =  [{word : ''}]
 let game_status = true;
+let modal_status = false; 
 
 function reducer(state = 기본state, 액션){
   if(액션.type === 'btnClick')
@@ -23,8 +24,6 @@ function reducer(state = 기본state, 액션){
 }
 
 function game_reducer(state = game_status, action){ 
-  console.log(action.type);
-
   if(action.type === 'game_end')
   {
     let temp = state;
@@ -42,12 +41,30 @@ function game_reducer(state = game_status, action){
   return state;
 }
 
-let store = createStore(combineReducers({reducer, game_reducer}));
+function open_modal_reducer(state = modal_status, action){
+  if(action.type === 'open')
+  {
+    let temp = state;
+    temp = true;
+    return temp;
+  }
+
+  if(action.type === 'close')
+  {
+    let temp = state;
+    temp = false;
+    return temp;
+  }
+
+  return state;
+}
+
+let store = createStore(combineReducers({reducer, game_reducer, open_modal_reducer}));
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <BrowserRouter basename="/Wordle"> */}
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/Wordle">
+    {/* <BrowserRouter basename="/"> */}
       <Provider store={store}>
         <App />
       </Provider> 

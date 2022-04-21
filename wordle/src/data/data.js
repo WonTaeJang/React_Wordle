@@ -47,52 +47,167 @@ const wordList = [
     {
         id: 9,
         word: 'FRUIT',
-        meaning: 'fruit - 명사 {noun} 과일'
+        meaning: '명사 {noun} 과일'
     },
     {
         id: 10,
         word: 'INFER',
-        meaning: 'infer - to - 동사 {vb} 추론하다'
+        meaning: 'to - 동사 {vb} 추론하다'
     },
     {
         id: 11,
         word: 'LUCKY',
-        meaning: 'lucky - 형용사 {adj.} 운수 좋은'
+        meaning: '형용사 {adj.} 운수 좋은'
     },
     {
         id: 12,
         word: 'MOIST',
-        meaning: 'moist - 형용사 {adj.} 습기 있는'
+        meaning: '형용사 {adj.} 습기 있는'
     },
     {
         id: 13,
         word: 'PRIDE',
-        meaning: 'pride - 명사 {noun} 자부심'
+        meaning: '명사 {noun} 자부심'
     },
     {
         id: 14,
         word: 'SEVEN',
-        meaning: 'seven - 명사 {noun} 칠,일곱'
+        meaning: '명사 {noun} 칠,일곱'
     },
     {
         id: 15,
         word: 'TASTE',
-        meaning: 'taste - 명사 {noun} 맛'
+        meaning: '명사 {noun} 맛'
     },
     {
         id: 16,
         word: 'YELLS',
-        meaning: 'yells - to yell 동사 {vb} 지르다'
+        meaning: 'to yell 동사 {vb} 지르다'
     },
     {
         id: 17,
         word: 'ZAPPY',
-        meaning: 'zappy- 형용사 (Adjective), 활발한, 한'
+        meaning: '형용사 (Adjective), 활발한, 한'
     },
     {
         id: 18,
         word: 'HORSE',
-        meaning: 'horse - 명사 {noun} 말'
+        meaning: '명사 {noun} 말'
+    },
+    {
+        id: 19,
+        word: 'ABIDE',
+        meaning: 'to - 동사 {vb} 버티다'
+    },
+    {
+        id: 20,
+        word: 'AGREE',
+        meaning: 'to - 동사 {vb} 동의하다'
+    },
+    {
+        id: 21,
+        word: 'BASIC',
+        meaning: '명사 {noun} 기본'
+    },
+    {
+        id: 22,
+        word: 'BEAST',
+        meaning: '명사 {noun} 짐승'
+    },
+    {
+        id: 23,
+        word: 'BRAIN',
+        meaning: '명사 {noun} 뇌'
+    },
+    {
+        id: 24,
+        word: 'CANDY',
+        meaning: '명사 {noun} 사탕'
+    },
+    {
+        id: 25,
+        word: 'CLOTH',
+        meaning: '명사 {noun} 옷감, 직물, 천'
+    },
+    {
+        id: 26,
+        word: 'CORNS',
+        meaning: 'corn 명사 {noun} 옥수수'
+    },
+    {
+        id: 27,
+        word: 'COVER',
+        meaning: '형용사 {adj.} 감싸다'
+    },
+    {
+        id: 28,
+        word: 'CUPID',
+        meaning: '명사 {noun} 큐피드'
+    },
+    {
+        id: 29,
+        word: 'DEATH',
+        meaning: '명사 {noun} 죽음'
+    },
+    {
+        id: 30,
+        word: 'EARLY',
+        meaning: '명사 (Noun), 일찍, 초기'
+    },
+    {
+        id: 31,
+        word: 'ENJOY',
+        meaning: 'to - 동사 {vb} 즐기다'
+    },
+    {
+        id: 32,
+        word: 'ERROR',
+        meaning: '명사 {noun} 실수'
+    },
+    {
+        id: 33,
+        word: 'EXIST',
+        meaning: 'to - 동사 {vb} 존재하다'
+    },
+    {
+        id: 34,
+        word: 'FEINT',
+        meaning: '명사 (Noun), 시늉, 페인트'
+    },
+    {
+        id: 35,
+        word: 'FROTH',
+        meaning: '명사 {noun} 거품'
+    },
+    {
+        id: 36,
+        word: 'GROWN',
+        meaning: '형용사 {adj.} 성장한'
+    },
+    {
+        id: 37,
+        word: 'GUESS',
+        meaning: 'to - 동사 {vb} 추측하다'
+    },
+    {
+        id: 38,
+        word: 'JAPAN',
+        meaning: 'Japan {pr.n.} 일본'
+    },
+    {
+        id: 39,
+        word: 'KNIFE',
+        meaning: '명사 {noun} 칼'
+    },
+    {
+        id: 40,
+        word: 'NASTY',
+        meaning: '형용사 {adj.} 협박하는'
+    },
+    {
+        id: 41,
+        word: 'PIXEL',
+        meaning: '명사 {noun} 화소'
     }
 ]
 
@@ -102,10 +217,10 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min; //최댓값도 포함, 최솟값도 포함
 }
 
-const answer = ()=>{
+function answer(){
     let num = getRandomIntInclusive(0, (wordList.length-1));
 
     return wordList[num]
 }
 
-export default answer();
+export default answer;

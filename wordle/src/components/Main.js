@@ -19,14 +19,18 @@ import '../App.css';
 
 // react bootstrap
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Modal } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 function Main(props) {
     let state = useSelector((state) => state.reducer);
     let game_state = useSelector((state) => state.game_reducer); // game 상태
     let dispatch = useDispatch();
 
-    const answer = Data.word;
+    // 게임 정답
+    let [answer, setAnswer] = useState({});
+   
+    // player 현황
+    let [player, setPlayer] = useState([]);
 
     // step에 따른 textbox 
     let [step, setStep] = useState(0);
@@ -42,7 +46,6 @@ function Main(props) {
     })
 
     let wordRef = useRef([]);
-    let titleRef = useRef();
     let keyArray = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
         "A", "S", "D", "F", "G", "H", "J", "K", "L",
         "Z", "X", "C", "V", "B", "N", "M", "BACKSPACE", "ENTER"];
@@ -60,9 +63,25 @@ function Main(props) {
                 setWord({ word: e.key.toUpperCase() });
             }
         })
-
-        console.log(answer);
     }, [])
+
+    // 게임 초기화
+    useEffect(()=>{
+        if(game_state)
+        {
+            setAnswer(Data());
+            wordRef.current.map((wr, i)=>{
+                wr.value = '';
+                wr.className = 'word-box';
+            })
+            setStep(0);
+            setWordList({'step0': []});
+        }
+    }, [game_state])
+
+    // useEffect(()=>{
+    //     console.log('an',answer);
+    // }, [answer])
 
     // keyboard로 키값을 받을때
     useEffect(() => {
@@ -100,20 +119,15 @@ function Main(props) {
 
                             // 실제 단어가 있는지 확인되었으면 해당 값의 일치 정보를 체크
                             // chkTAnswer 에 정보를 넣고 정답인지 확인 후 정답이 아니면 다음 단계
-                            let comp = Compare(answer, wordSum);
+                            //console.log(answer);
+                            let comp = Compare(answer.word, wordSum);
 
                             // 해당 값을 넣어 단어 리스트 색 변환하기
                             setChkTAnswer({ ...comp, step: step });
 
                             //console.log(step, maxStep, (step+1) === maxStep);
                             if (comp.isAnswer || (step + 1) === maxStep.length) {
-                                console.log("step over");
-
-                                // if(comp.isAnswer)
-                                // {
-                                //     alert("is Correct!!");
-                                //     //console.log();
-                                // }                                
+                                console.log("step over");                               
                             }
                             else {
                                 let stepUp = (step + 1)
@@ -172,7 +186,7 @@ function Main(props) {
             else
                 wordRef.current[i + step * 5].value = '';
         }
-        titleRef.current.focus();
+        wordRef.current[0].focus();
     }, [wordList])
 
     // 색 변환
@@ -194,16 +208,17 @@ function Main(props) {
         })
 
         if (((chkTAnswer.step + 1) === maxStep.length) || chkTAnswer.isAnswer) {
+            
             dispatch({type:'game_end'});
 
-            if (chkTAnswer.isAnswer) {
-                // 모달창 필요
-                console.log('Clear!!');
+            let copy = [...player];
+            let obj = {
+                answer : answer.word,
+                meaning : answer.meaning,
+                isAnswer : chkTAnswer.isAnswer
             }
-            else {
-                // 모달창 필요
-                console.log('Fail!!');
-            }
+            copy.push(obj);
+            setPlayer(copy);
         }
 
     }, [chkTAnswer])
@@ -211,18 +226,22 @@ function Main(props) {
     return (
         <>
             <Container>
-                <h1 ref={el => (titleRef.current = el)}>Wordle Start!</h1>
-                {
-                    maxStep.map((a, i) => {
-                        return (
-                            <WordBox key={i} id={a} wordRef={wordRef}></WordBox>
-                        )
-                    })
-                }
+                <div className="nav">
+                    <input type="image" className="icon" onClick={()=>{
+                        if(player.length > 0 )
+                            dispatch({ type: 'open' })
+                    }} src="analytics-icon.png"></input>
+                </div>
+                <h1>Wordle</h1>
+                    {
+                        maxStep.map((a, i) => {
+                            return (
+                                <WordBox key={i} id={a} wordRef={wordRef}></WordBox>
+                            )
+                        })
+                    }
                 <KeyBoard chkTAnswer={chkTAnswer}></KeyBoard>
-
-                <ResultModal ></ResultModal>
-                
+                <ResultModal player={player}></ResultModal>
             </Container>
         </>
     )
