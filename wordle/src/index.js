@@ -5,10 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
-import { createStore} from "redux";
+import { combineReducers, createStore} from "redux";
 import { Provider } from "react-redux";
 
 let 기본state =  [{word : ''}]
+let game_status = true;
 
 function reducer(state = 기본state, 액션){
   if(액션.type === 'btnClick')
@@ -21,7 +22,27 @@ function reducer(state = 기본state, 액션){
   return state;
 }
 
-let store = createStore(reducer);
+function game_reducer(state = game_status, action){ 
+  console.log(action.type);
+
+  if(action.type === 'game_end')
+  {
+    let temp = state;
+    temp = false;
+    return temp;
+  }
+
+  if(action.type === 'game_start')
+  {
+    let temp = state;
+    temp = true;
+    return temp;
+  }
+
+  return state;
+}
+
+let store = createStore(combineReducers({reducer, game_reducer}));
 
 ReactDOM.render(
   <React.StrictMode>

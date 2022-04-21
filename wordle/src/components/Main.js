@@ -1,17 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import '../App.css';
-import Data from '../data/data.js'; // 정답
+
+// axios 
+import axios from 'axios';
+
+// react redux
+import { useDispatch ,useSelector } from 'react-redux';
+
+// javascript
 import Compare from '../data/compareWord.js'; // 정답 비교
+import Data from '../data/data.js'; // 정답
+
+// components
+import KeyBoard from './KeyBoard';
+import ResultModal from "./ResultModal";
+
+// css
+import '../App.css';
+
+// react bootstrap
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Container, Button, Modal } from 'react-bootstrap';
 
-import KeyBoard from './KeyBoard';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-
-
 function Main(props) {
-    let state = useSelector((state) => state);
+    let state = useSelector((state) => state.reducer);
+    let game_state = useSelector((state) => state.game_reducer); // game 상태
+    let dispatch = useDispatch();
+
     const answer = Data.word;
 
     // step에 따른 textbox 
@@ -62,6 +76,7 @@ function Main(props) {
         let tempObj = {};
         let tempArray = [];
 
+        if(!game_state) return;
         if (!keyArray.includes(word.word)) return;
 
         const chk = async () => {
@@ -179,23 +194,19 @@ function Main(props) {
         })
 
         if (((chkTAnswer.step + 1) === maxStep.length) || chkTAnswer.isAnswer) {
+            dispatch({type:'game_end'});
+
             if (chkTAnswer.isAnswer) {
                 // 모달창 필요
-                alert('Clear!!');
+                console.log('Clear!!');
             }
             else {
                 // 모달창 필요
-                alert('Fail!!');
+                console.log('Fail!!');
             }
         }
 
     }, [chkTAnswer])
-
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     return (
         <>
@@ -210,31 +221,8 @@ function Main(props) {
                 }
                 <KeyBoard chkTAnswer={chkTAnswer}></KeyBoard>
 
-                <Button variant="primary" onClick={handleShow}>
-                    Launch static backdrop modal
-                </Button>
-
-                <Modal
-                    show={show}
-                    onHide={handleClose}
-                    backdrop="static"
-                    keyboard={false}
-                    centered
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Modal title</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        I will not close if you click outside me. Don't even try to press
-                        escape key.
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary">Understood</Button>
-                    </Modal.Footer>
-                </Modal>
+                <ResultModal ></ResultModal>
+                
             </Container>
         </>
     )

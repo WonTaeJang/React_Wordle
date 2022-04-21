@@ -1,14 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
+import { useSelector } from 'react-redux';
+import { useEffect,useState } from 'react';
 
 // components
 import Main from './components/Main.js';
 
-import { useSelector } from 'react-redux';
-
 // npm install react-router-dom
 import { Route, Routes } from 'react-router-dom';
-import { useEffect,useState } from 'react';
 
 function App() {
   //console.log('hi: ',state.reducer);

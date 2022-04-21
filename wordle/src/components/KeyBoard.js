@@ -5,10 +5,12 @@ import '../App.css';
 
 function KeyBoard(props) {
     let dispatch = useDispatch();
+    let game_state = useSelector((state) => state.game_reducer); // game 상태
     let chkTAnswer = props.chkTAnswer;
     let keyboard = useRef([]);
     let onClickEvent = (e) => {
-        dispatch({ type: 'btnClick', payload: e });
+        if(game_state)
+            dispatch({ type: 'btnClick', payload: e });
     }
 
     useEffect(()=>{
