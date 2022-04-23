@@ -63,8 +63,8 @@ let store = createStore(combineReducers({reducer, game_reducer, open_modal_reduc
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename="/Wordle">
-    {/* <BrowserRouter basename="/"> */}
+    {/* <BrowserRouter basename="/Wordle"> */}
+    <BrowserRouter basename="/">
       <Provider store={store}>
         <App />
       </Provider> 

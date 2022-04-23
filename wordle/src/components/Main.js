@@ -119,13 +119,11 @@ function Main(props) {
 
                             // 실제 단어가 있는지 확인되었으면 해당 값의 일치 정보를 체크
                             // chkTAnswer 에 정보를 넣고 정답인지 확인 후 정답이 아니면 다음 단계
-                            //console.log(answer);
                             let comp = Compare(answer.word, wordSum);
 
                             // 해당 값을 넣어 단어 리스트 색 변환하기
                             setChkTAnswer({ ...comp, step: step });
 
-                            //console.log(step, maxStep, (step+1) === maxStep);
                             if (comp.isAnswer || (step + 1) === maxStep.length) {
                                 console.log("step over");                               
                             }
@@ -242,6 +240,7 @@ function Main(props) {
                     }
                 <KeyBoard chkTAnswer={chkTAnswer}></KeyBoard>
                 <ResultModal player={player}></ResultModal>
+                <Toaster></Toaster>
             </Container>
         </>
     )
@@ -258,6 +257,16 @@ function WordBox(props) {
             <input id={`${props.id}-3`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(3 + (count - 1) * 5)] = el)}></input>
             <input id={`${props.id}-4`} type="text" readOnly className="word-box" ref={el => (props.wordRef.current[(4 + (count - 1) * 5)] = el)}></input>
         </div>
+    )
+}
+
+function Toaster(){
+    return (
+        <>
+            <div className="toaster">
+                <div>Not in word list</div>
+            </div>
+        </>
     )
 }
 
