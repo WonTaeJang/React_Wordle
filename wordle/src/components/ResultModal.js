@@ -72,14 +72,14 @@ function ResultModal(props) {
                                 : 'NULL'
                         }
                     </p>
-                    <p>
+                    {/* <p>
                         Mean:
                         {
                             props.player.length > 0 ?
                                 ' '+ props.player[props.player.length - 1].meaning
                                 : 'NULL'
                         }
-                    </p>
+                    </p> */}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>

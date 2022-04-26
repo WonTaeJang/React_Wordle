@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 
 // react redux
-import { useDispatch ,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // javascript
 import Compare from '../data/compareWord.js'; // 정답 비교
@@ -28,7 +28,7 @@ function Main(props) {
 
     // 게임 정답
     let [answer, setAnswer] = useState({});
-   
+
     // player 현황
     let [player, setPlayer] = useState([]);
 
@@ -66,16 +66,33 @@ function Main(props) {
     }, [])
 
     // 게임 초기화
-    useEffect(()=>{
-        if(game_state)
-        {
-            setAnswer(Data());
-            wordRef.current.map((wr, i)=>{
-                wr.value = '';
-                wr.className = 'word-box';
-            })
-            setStep(0);
-            setWordList({'step0': []});
+    useEffect(() => {
+        if (game_state) {
+            let ans = async () => {
+                await axios.get(`https://random-word-api.herokuapp.com/word?length=5`)
+                    .then((result) => {
+                        console.log(result);
+
+                        setAnswer({word: result.data[0].toUpperCase()});
+                        wordRef.current.map((wr, i) => {
+                            wr.value = '';
+                            wr.className = 'word-box';
+                        })
+                        setStep(0);
+                        setWordList({ 'step0': [] });
+                    })
+                    .catch((e) => {
+                        if (e.response) {
+                            if (e.response.status === 404) {
+                                console.log(`fail word: ${e}`);
+                            }
+                        }
+                    })
+            }
+
+            ans();
+
+
         }
     }, [game_state])
 
@@ -95,7 +112,7 @@ function Main(props) {
         let tempObj = {};
         let tempArray = [];
 
-        if(!game_state) return;
+        if (!game_state) return;
         if (!keyArray.includes(word.word)) return;
 
         const chk = async () => {
@@ -120,12 +137,12 @@ function Main(props) {
                             // 실제 단어가 있는지 확인되었으면 해당 값의 일치 정보를 체크
                             // chkTAnswer 에 정보를 넣고 정답인지 확인 후 정답이 아니면 다음 단계
                             let comp = Compare(answer.word, wordSum);
-
+                            console.log(answer.word);
                             // 해당 값을 넣어 단어 리스트 색 변환하기
                             setChkTAnswer({ ...comp, step: step });
 
                             if (comp.isAnswer || (step + 1) === maxStep.length) {
-                                console.log("step over");                               
+                                console.log("step over");
                             }
                             else {
                                 let stepUp = (step + 1)
@@ -206,14 +223,14 @@ function Main(props) {
         })
 
         if (((chkTAnswer.step + 1) === maxStep.length) || chkTAnswer.isAnswer) {
-            
-            dispatch({type:'game_end'});
+
+            dispatch({ type: 'game_end' });
 
             let copy = [...player];
             let obj = {
-                answer : answer.word,
-                meaning : answer.meaning,
-                isAnswer : chkTAnswer.isAnswer
+                answer: answer.word,
+                //meaning : answer.meaning,
+                isAnswer: chkTAnswer.isAnswer
             }
             copy.push(obj);
             setPlayer(copy);
@@ -225,19 +242,19 @@ function Main(props) {
         <>
             <Container>
                 <div className="nav">
-                    <input type="image" className="icon" onClick={()=>{
-                        if(player.length > 0 )
+                    <input type="image" className="icon" onClick={() => {
+                        if (player.length > 0)
                             dispatch({ type: 'open' })
                     }} src="analytics-icon.png"></input>
                 </div>
                 <h1>Wordle</h1>
-                    {
-                        maxStep.map((a, i) => {
-                            return (
-                                <WordBox key={i} id={a} wordRef={wordRef}></WordBox>
-                            )
-                        })
-                    }
+                {
+                    maxStep.map((a, i) => {
+                        return (
+                            <WordBox key={i} id={a} wordRef={wordRef}></WordBox>
+                        )
+                    })
+                }
                 <KeyBoard chkTAnswer={chkTAnswer}></KeyBoard>
                 <ResultModal player={player}></ResultModal>
                 <Toaster></Toaster>
@@ -260,7 +277,7 @@ function WordBox(props) {
     )
 }
 
-function Toaster(){
+function Toaster() {
     return (
         <>
             <div className="toaster">
