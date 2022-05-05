@@ -119,16 +119,3 @@ body {
   width: fit-content;
   transform: translate(-50%, 0);
 }
-
-.toast {
-  position: relative;
-  margin: 16px;
-  background-color: #000000;
-  color: #ffffff;
-  padding: 16px;
-  border: none;
-  border-radius: 4px;
-  opacity: 1;
-  transition: opacity 300ms cubic-bezier(0.645, 0.045, 0.355, 1);
-  font-weight: 700;
-}

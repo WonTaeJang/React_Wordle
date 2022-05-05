@@ -71,7 +71,7 @@ function Main(props) {
             let ans = async () => {
                 await axios.get(`https://random-word-api.herokuapp.com/word?length=5`)
                     .then((result) => {
-                        console.log(result);
+                        //console.log(result);
 
                         setAnswer({word: result.data[0].toUpperCase()});
                         wordRef.current.map((wr, i) => {
@@ -257,7 +257,7 @@ function Main(props) {
                 }
                 <KeyBoard chkTAnswer={chkTAnswer}></KeyBoard>
                 <ResultModal player={player}></ResultModal>
-                <Toaster></Toaster>
+                {/* <Toaster></Toaster> */}
             </Container>
         </>
     )
